@@ -6,7 +6,7 @@ WINDRES := $(PREFIX)windres
 SRCS := $(shell find . -name '*.cpp')
 DEPS := $(SRCS:%.cpp=%.d)
 OBJS := $(SRCS:%.cpp=%.o)
-CXXFLAGS := -O0 -DUNICODE -D_UNICODE -mwin32 -municode --static -static-libgcc -static-libstdc++
+CXXFLAGS := -DUNICODE -D_UNICODE -mwin32 -municode --static -static-libgcc -static-libstdc++
 SUFFIXES := .cpp .o .d
 LIBS := -l version -l shlwapi -l crypt32
 
