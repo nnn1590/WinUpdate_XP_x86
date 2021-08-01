@@ -9,7 +9,7 @@ OBJS := $(SRCS:%.cpp=%.o)
 SPECS := $(PREFIX)g++$(SUFFIX).specs
 CXXFLAGS := -specs=$(SPECS) -DUNICODE -D_UNICODE -mwin32 -municode --static -static-libgcc -static-libstdc++
 SUFFIXES := .cpp .o .d
-LIBS := -lversion -lshlwapi -lcrypt32
+LIBS := -lversion -lshlwapi -lcrypt32 -lmsvcr120
 
 .PHONY: all clean
 
