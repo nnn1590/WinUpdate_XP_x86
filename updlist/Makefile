@@ -6,9 +6,10 @@ WINDRES := $(PREFIX)windres
 SRCS := $(shell find . -name '*.cpp')
 DEPS := $(SRCS:%.cpp=%.d)
 OBJS := $(SRCS:%.cpp=%.o)
-CXXFLAGS := -DUNICODE -D_UNICODE -mwin32 -municode --static -static-libgcc -static-libstdc++
+SPECS := $(PREFIX)g++$(SUFFIX).specs
+CXXFLAGS := -specs=$(SPECS) -DUNICODE -D_UNICODE -mwin32 -municode --static -static-libgcc -static-libstdc++
 SUFFIXES := .cpp .o .d
-LIBS := -l version -l shlwapi -l crypt32
+LIBS := -lversion -lshlwapi -lcrypt32
 
 .PHONY: all clean
 
@@ -16,14 +17,17 @@ all: $(PROGRAM)
 
 -include $(DEPS)
 
-$(PROGRAM): $(OBJS) updlist.res
-	$(CXX) $(CXXFLAGS) -o $(PROGRAM) $^ $(LIBS)
+$(PROGRAM): $(SPECS) $(OBJS) updlist.res
+	$(CXX) $(CXXFLAGS) -o $(PROGRAM) $(OBJS) updlist.res $(LIBS)
 
-.cpp.o:
+.cpp.o: $(SPECS)
 	$(CXX) $(CXXFLAGS) -c -MMD -MP $<
 
 updlist.res: updlist.rc
 	$(WINDRES) --output-format=coff -o $@ $<
 
+$(SPECS):
+	$(CXX) -dumpspecs | sed -e 's/-lmsvcrt/-lmsvcr120/g' > $@
+
 clean:
-	$(RM) $(OBJS) $(DEPS) updlist.res $(PROGRAM)
+	$(RM) $(OBJS) $(DEPS) updlist.res $(PROGRAM) $(SPECS)
